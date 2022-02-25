@@ -1,0 +1,70 @@
+.button {
+    display: inline-block;
+    padding: 20px 20px;
+    font-size: 27px;
+    margin-top: 70px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: #fff;
+    background-color: #3e8e41;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 9px #999;
+  }
+  
+.button:hover {background-color: #3e8e41}
+  
+.button:active {
+    background-color: #3e8e41;
+    box-shadow: 0 5px #666;
+    transform: translateY(4px);
+  }
+
+* {
+    box-sizing: border-box;
+  }
+
+body
+{
+  margin: 0px;
+  padding: 0px;
+  font-family: monospace;
+  background-color: #040c2e;
+}
+.row
+{
+  display: inline-flex;
+  clear: both;
+}
+.columnLateral
+{
+  float: left;
+  width: 15%;
+  min-width: 300px;
+}
+.columnCetral
+{
+  float: left;
+  width: 70%;
+  min-width: 300px;
+}
+#joy1Div
+{
+  width:200px;
+  height:200px;
+  margin:40px
+}
+#joy2Div
+{
+  width:200px;
+  height:200px;
+  margin:40px
+}
+
+#slider{
+  margin-top: 50px;
+  width: 90%;
+  height: 20px;
+}
