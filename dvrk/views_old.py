@@ -1,6 +1,5 @@
 import urllib.request
 import json
-import time
 import math
 import numpy as np
 from scipy.spatial.transform import Rotation
@@ -8,7 +7,6 @@ from zmqRemoteApi import RemoteAPIClient
 from django.shortcuts import render
 from django.http import HttpResponse
 import json
-from matplotlib.pyplot import imshow, show    
 
 client = RemoteAPIClient()
 sim = client.getObject('sim')
@@ -149,29 +147,3 @@ def apijoy(request):
             oldflag = 0
 
     return HttpResponse(json.dumps(s))
-        
-
-
-
-def apimg(request):
-
-    vis_left = sim.getObjectHandle("./Vision_sensor_left")
-    sizx, sizy = 300,300
-
-    if request.method == "GET":
-        a = sim.getVisionSensorCharImage(vis_left,0,0,sizx,sizy)[0]
-        # print(a)
-        li = []
-        for idx,i in enumerate(a):
-            # if (idx+1)%3 == 0:
-                # li.append(256)
-            li.append(i)
-        print("len = ", len(li))
-        img = np.array(li,dtype=np.uint8).reshape(sizx,sizy,3)
-        # imshow(img)
-        # show()
-
-        # print(len(li))
-        return HttpResponse(json.dumps(li))
-
-        # return HttpResponse(a, content_type='application/octet-stream')

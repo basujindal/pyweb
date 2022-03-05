@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-import json      
-from matplotlib.pyplot import imshow, show   
+import json       
 
 posx, posy, posz, action, f, b, s, sensitivity = 100,100, 100,'joystick0', 0, 0, 0, 50
 img = 0
@@ -34,7 +33,6 @@ def apijoy(request):
 			sensitivity = request.POST['sen']
 
 		# print(action, posx, posy, posz,f,b,s, sensitivity)
-		print(f,b)
 		return HttpResponse(json.dumps(1))
 
 	elif request.method == "GET":
@@ -49,19 +47,10 @@ def apimg(request):
 	global img
 	if request.method == "POST" and request.is_ajax:
 		img = request.read()
-		print(len(img))
-		# print(request.read())
 
 		return  HttpResponse(1)
 
 
 	elif request.method == "GET":
-		# print(img)
-
-		li = []
-		for idx,i in enumerate(img):
-			if (idx+1)%3 == 0:
-				li.append(256)
-			li.append(i)
 
 		return  HttpResponse(img,headers={'Content-Type': 'application/octet-stream'})

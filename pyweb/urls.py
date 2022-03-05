@@ -20,6 +20,6 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('webtools/', include('webtools.urls')),
-    path('dvrk/', include('ambf.urls')),
+    path('dvrk/', include('dvrk.urls')),
     path('pdf_manage/', include('pdf_manage.urls')),
 ]
