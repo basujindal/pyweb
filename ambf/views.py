@@ -1,9 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-import json
+import json      
+from matplotlib.pyplot import imshow, show   
 
+posx, posy, posz, action, f, b, s, sensitivity = 100,100, 100,'joystick0', 0, 0, 0, 50
+img = 0
 
-posx, posy, posz, action, f, b, s, sensitivity = 100,100, 100,'joystick0', 0, 0, 1, 50
 def index(request):
 
 	return render(request, 'home.html')
@@ -31,12 +33,35 @@ def apijoy(request):
 		elif action == 'sensitivity':
 			sensitivity = request.POST['sen']
 
-		print(action, posx, posy, posz,f,b,s, sensitivity)
-		return HttpResponse(json.dumps(s))
+		# print(action, posx, posy, posz,f,b,s, sensitivity)
+		print(f,b)
+		return HttpResponse(json.dumps(1))
 
 	elif request.method == "GET":
 
 		actions = {'action': action, 'x': posx, 'y': posy, 'z': posz, 'o':f, 'c': b, 's':s, 'sensitivity': sensitivity}
 		f,b = 0,0
-
 		return HttpResponse(json.dumps(actions))
+
+
+
+def apimg(request):
+	global img
+	if request.method == "POST" and request.is_ajax:
+		img = request.read()
+		print(len(img))
+		# print(request.read())
+
+		return  HttpResponse(1)
+
+
+	elif request.method == "GET":
+		# print(img)
+
+		li = []
+		for idx,i in enumerate(img):
+			if (idx+1)%3 == 0:
+				li.append(256)
+			li.append(i)
+
+		return  HttpResponse(img,headers={'Content-Type': 'application/octet-stream'})

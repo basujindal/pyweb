@@ -143,7 +143,7 @@ var JoyStick = function (container, parameters) {
 
   function onChange() {
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", url + "/ambf/apijoy/");
+    xhr.open("POST", url + "/dvrk/apijoy/");
     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhr.send("action=joystick" + index + "&posx=" + movedX + "&posy=" + movedY);
   }

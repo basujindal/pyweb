@@ -6,25 +6,72 @@
     <script src="../static/joy.js"></script>
   </head>
   <body>
-    <div class="row">
-      <div class="columnLateral">
-        <div id="joy1Div"></div>
-      </div>
-      <div class="columnCetral">
-        <input id="slider" type="range" min="1" max="100" value="50" />
-        <output id="slideout"></output>
-        <button id="buttonf" class="button">Open</button>
-        <button id="buttons" class="button">On</button>
-        <button id="buttonb" class="button">Close</button>
-      </div>
-      <div class="columnLateral">
-        <div id="joy2Div"></div>
-      </div>
+    <div id="dvrkVideo"></div>
+
+    <div class="Row">
+      <div id="joy1Div"></div>
+      <button id="buttonf" class="button">Open</button>
+    </div>
+    <div class="Row">
+      <input id="slider" type="range" min="1" max="10" value="2" />
+      <output id="slideout"></output>
+      <button id="buttons" class="button">Off</button>
+    </div>
+    <div class="Row">
+      <button id="buttonb" class="button">Close</button>
+      <div id="joy2Div"></div>
     </div>
 
     <script>
-      // var url = "http://192.168.29.148:8000";
+      var Vwidth = 250,
+        Vheight = 250;
       var url = "http://10.42.0.1:8000";
+      Vcontainer = document.getElementById("dvrkVideo");
+      var Vcanvas = document.createElement("canvas");
+      Vcanvas.id = "dvrkVideo";
+      Vcanvas.width = Vwidth;
+      Vcanvas.height = Vheight;
+      Vcontainer.appendChild(Vcanvas);
+      var ctx = Vcanvas.getContext("2d");
+      var idata = ctx.createImageData(Vwidth, Vheight);
+
+      function demo() {
+        var xhrv = new XMLHttpRequest();
+        xhrv.open("GET", url + "/dvrk/apimg/");
+        xhrv.setRequestHeader("Accept", "application/octet-stream");
+        xhrv.responseType = "arraybuffer";
+
+        xhrv.onload = function () {
+          var Varr = xhrv.response;
+          var pixels = new Uint8ClampedArray(Varr);
+
+          var vdata = idata.data;
+          var vlen = vdata.length;
+          var vi = 0;
+          var vt = 0;
+
+          for (; vi < vlen; vi += 4) {
+            vdata[vi] = pixels[vt]; /// copy RGB data to canvas from custom array
+            vdata[vi + 1] = pixels[vt + 1];
+            vdata[vi + 2] = pixels[vt + 2];
+            vdata[vi + 3] = 255; /// remember this one with createImageBuffer
+
+            vt += 3;
+          }
+          ctx.putImageData(idata, 0, 0); /// put data to canvas
+          console.log("Hello");
+        };
+        xhrv.send();
+      }
+
+      function runner(repeats = 5000) {
+        if (repeats > 0) {
+          demo();
+          setTimeout(() => runner(repeats), 100);
+        }
+      }
+
+      runner();
       var Joy1 = new JoyStick("joy1Div", {
         index: 1,
         autoReturnToCenter: true,
@@ -39,9 +86,11 @@
 
       document.getElementById("buttonf").addEventListener("click", function () {
         loadText("open");
+        console.log("open");
       });
       document.getElementById("buttonb").addEventListener("click", function () {
         loadText("close");
+        console.log("close");
       });
       document.getElementById("buttons").addEventListener("click", () => {
         ChangeButtonColor();
@@ -53,7 +102,7 @@
 
       function loadText(action) {
         var xhr = new XMLHttpRequest();
-        xhr.open("POST", url + "/ambf/apijoy/");
+        xhr.open("POST", url + "/dvrk/apijoy/");
         xhr.setRequestHeader(
           "Content-type",
           "application/x-www-form-urlencoded"

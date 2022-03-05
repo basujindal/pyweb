@@ -1,38 +1,61 @@
 <!DOCTYPE html>
 <html>
   <head>
-    NY IMAGE
+    MY IMAGE
   </head>
   <body>
-    <script>
-      var width = 400,
-        height = 400,
-        buffer = new Uint8ClampedArray(width * height * 4);
+    <canvas id="myCanvas" width="300" height="300"></canvas>
 
-      for (var y = 0; y < height; y++) {
-        for (var x = 0; x < width; x++) {
-          var pos = (y * width + x) * 4; // position in buffer based on x and y
-          buffer[pos] = 123; // some R value [0, 255]
-          buffer[pos + 1] = 76; // some G value
-          buffer[pos + 2] = 12; // some B value
-          buffer[pos + 3] = 255; // set alpha channel
+    <script>
+      var width = 280,
+        height = 280,
+        // buffer = new Uint8ClampedArray(width * height * 4),
+        canvas = document.getElementById("myCanvas");
+      ctx = canvas.getContext("2d");
+      document.body.appendChild(canvas);
+
+      var idata = ctx.createImageData(width, height),
+        url = "http://10.42.0.1:8000/ambf/apimg/";
+
+      function demo() {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", url);
+        xhr.setRequestHeader("Accept", "application/octet-stream");
+        xhr.responseType = "arraybuffer";
+
+        xhr.onload = function () {
+          var arr = xhr.response;
+          var pixels = new Uint8ClampedArray(arr);
+          var data = idata.data;
+          var len = data.length;
+          var i = 0;
+          var t = 0;
+
+          for (; i < len; i += 4) {
+            data[i] = pixels[t]; /// copy RGB data to canvas from custom array
+            data[i + 1] = pixels[t + 1];
+            data[i + 2] = pixels[t + 2];
+            data[i + 3] = 255; /// remember this one with createImageBuffer
+
+            t += 3;
+          }
+          ctx.putImageData(idata, 0, 0); /// put data to canvas
+
+          console.log("Hello");
+        };
+        xhr.send();
+      }
+      // demo();
+
+      function runner(repeats = 5000) {
+        if (repeats > 0) {
+          demo();
+          setTimeout(() => runner(repeats - 1), 200);
         }
       }
-      var canvas = document.createElement("canvas"),
-        ctx = canvas.getContext("2d");
 
-      canvas.width = width;
-      canvas.height = height;
-
-      // create imageData object
-      var idata = ctx.createImageData(width, height);
-
-      // set our buffer as source
-      idata.data.set(buffer);
-
-      // update canvas with new data
-      ctx.putImageData(idata, 0, 0);
-      document.body.appendChild(canvas);
+      runner();
+      // demo();
     </script>
   </body>
 </html>
