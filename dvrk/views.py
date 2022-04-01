@@ -27,7 +27,7 @@ def apijoy(request):
 			b, f = 1,0
 		elif action == 'On':
 			s = 1
-		elif action == 'Of':
+		elif action == 'Off':
 			s = 0
 		elif action == 'sensitivity':
 			sensitivity = request.POST['sen']
