@@ -17,5 +17,6 @@
 
 ## Notes
 
-- VREP_scenes were taken from []()
+- VREP_scenes were taken from a repository by [
+unina-icaros](https://github.com/unina-icaros/dvrk-vrep)
 - zmqRemoteApi was taken from CoppeliaSim package.
