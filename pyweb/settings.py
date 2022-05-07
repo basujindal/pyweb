@@ -29,14 +29,9 @@ DEBUG = True
 ALLOWED_HOSTS = ["localhost", "10.42.0.1", "127.0.0.1", "192.168.24.16", "192.168.29.148", "0.0.0.0"]
 
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
-
 # Application definition
 
 INSTALLED_APPS = [
-    'webtools.apps.WebtoolsConfig',
-    'pdf_manage.apps.PdfManageConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
