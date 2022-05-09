@@ -1,7 +1,7 @@
 ## Requirements
 
-- Anaconda
-- pip install Django django-cors-headers cbor zmq
+- Install Anaconda for python package version management
+- Install the required python packages using `pip install -r requirements.txt`
 - CoppeliaSim Simulator [Download](https://www.coppeliarobotics.com/downloads)
 
 ## Steps to run the Simulation
