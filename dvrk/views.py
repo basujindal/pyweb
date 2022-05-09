@@ -12,7 +12,7 @@ def index(request):
 def apijoy(request):
 
 	global posx, posy, posz,action, f, b, s, sensitivity
-	if request.method == "POST" and request.is_ajax:
+	if request.method == "POST":
 		f, b = 0,0
 		action = request.POST['action']
 
@@ -45,7 +45,7 @@ def apijoy(request):
 
 def apimg(request):
 	global img
-	if request.method == "POST" and request.is_ajax:
+	if request.method == "POST":
 		img = request.read()
 
 		return  HttpResponse(1)

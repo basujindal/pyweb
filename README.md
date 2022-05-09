@@ -1,7 +1,7 @@
 ## Requirements
 
-- Django == 3.2.9
-- zmq
+- Anaconda
+- pip install Django django-cors-headers cbor zmq
 - CoppeliaSim Simulator [Download](https://www.coppeliarobotics.com/downloads)
 
 ## Steps to run the Simulation
@@ -18,5 +18,5 @@
 ## Notes
 
 - VREP_scenes were taken from a repository by [
-unina-icaros](https://github.com/unina-icaros/dvrk-vrep)
+  unina-icaros](https://github.com/unina-icaros/dvrk-vrep)
 - zmqRemoteApi was taken from CoppeliaSim package.
