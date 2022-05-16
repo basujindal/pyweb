@@ -20,3 +20,10 @@
 - VREP_scenes were taken from a repository by [
   unina-icaros](https://github.com/unina-icaros/dvrk-vrep)
 - zmqRemoteApi was taken from CoppeliaSim package.
+
+## ToDO
+
+- Log images, cross check logging, Log Peg position
+- Test Second Puzzle
+- 2nd Phone (Maybe)
+- Websockets (Maybe)

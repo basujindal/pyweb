@@ -17,18 +17,31 @@ async def move_bot(sim):
     df.to_csv("Experiment1.csv")
     row = {'Timestamp': 0, 'Input_L': 0, 'PSM_L': (0,0,0), 'Gripper_L':(0,0), 'Puzzle_position':0}
 
-    # Getting object handles 
-    targetID = await sim.getObjectHandle('TargetPSMR')
-    gripper1 = await sim.getObjectHandle("J3_dx_TOOL2")
-    gripper2 = await sim.getObjectHandle("J3_sx_TOOL2")
-    toolPitch = await sim.getObjectHandle("/RCM_PSM2/J2_TOOL2")
-    toolRoll = await sim.getObjectHandle("J1_TOOL2")
+    # Get object handles 
+    targetIDL = await sim.getObjectHandle('TargetPSML')
+    gripper1L = await sim.getObjectHandle("J3_dx_TOOL1")
+    gripper2L = await sim.getObjectHandle("J3_sx_TOOL1")
+    toolPitchL = await sim.getObjectHandle("J2_TOOL1")
+    toolRollL = await sim.getObjectHandle("J1_TOOL1")
+
+    targetIDR = await sim.getObjectHandle('TargetPSMR')
+    gripper1R = await sim.getObjectHandle("J3_dx_TOOL2")
+    gripper2R = await sim.getObjectHandle("J3_sx_TOOL2")
+    toolPitchR = await sim.getObjectHandle("J2_TOOL2")
+    toolRollR = await sim.getObjectHandle("J1_TOOL2")
+
+
 
     # Reading initial position
-    pos = await sim.getObjectPosition(targetID, -1)
-    posg1, posg2 = await sim.getJointPosition(gripper1), await sim.getJointPosition(gripper2)
-    tool_roll, tool_pitch = await sim.getJointPosition(toolRoll),await sim.getJointPosition(toolPitch)
-    print("TargetID & Position = ", targetID, pos, gripper1, gripper2)
+    posL = await sim.getObjectPosition(targetIDL, -1)
+    posg1L, posg2L = await sim.getJointPosition(gripper1L), await sim.getJointPosition(gripper2L)
+    tool_rollL, tool_pitchL = await sim.getJointPosition(toolRollL),await sim.getJointPosition(toolPitchL)
+    print("TargetID & Position = ", targetIDL, posL, gripper1L, gripper2L)
+
+    posR = await sim.getObjectPosition(targetIDR, -1)
+    posg1R, posg2R = await sim.getJointPosition(gripper1R), await sim.getJointPosition(gripper2R)
+    tool_rollR, tool_pitchR = await sim.getJointPosition(toolRollR),await sim.getJointPosition(toolPitchL)
+    print("TargetID & Position = ", targetIDR, posR, gripper1R, gripper2R)
 
 
     # Logging initial position
@@ -67,7 +80,7 @@ async def move_bot(sim):
         # if 1:
 
             movex = -(delx - delx_old)
-            movey = -(dely - dely_old)
+            movey = (dely - dely_old)
             movez = -(delz - delz_old)
             
 
