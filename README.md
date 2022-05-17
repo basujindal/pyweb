@@ -1,3 +1,5 @@
+# Instructions for the conducting the experiments are in SOP.md
+
 ## Requirements
 
 - Install Anaconda for python package version management

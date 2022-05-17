@@ -12,7 +12,7 @@
 
 # Instructions for performing the experiment using a Geomagic Touch
 
-- The Geomagic stylus should be inserted inside the ink well before each experiment.
+- The Geomagic stylus should be kept on the 5th circle before and after each experiment.
 
 - The stylus will move the PSM tip position in the 3D space.
 
@@ -36,7 +36,7 @@ eg. `python rosnode_listener.py -n dVRK_logs_Basu_Jindal_Geomagic_Exp_1.csv`
 
 5. After the experiment is done stop rosnode_listener.py
 
-6. Insert stylus back into the Ink Well and stop the simulation.
+6. Keep on the stylus on the 5th circle and stop the simulation.
 
 7. Repeat steps 3 to 6 for each user and each experiment.
 
