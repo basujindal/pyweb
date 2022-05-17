@@ -13,7 +13,7 @@
 - If accessing the controller through smartphone, replace 127.0.0.1 by the host ip address.
   eg. 10.42.0.1:8000
 
-- Run the script to communicate with CoppeliaSim simulation using `python async_img_sensor.py`
+- Run the script to communicate with CoppeliaSim simulation using `python async_img_sensor.py -n log_file_name.csv`
 
 ## Notes
 
@@ -23,14 +23,11 @@
 
 ## ToDO
 
-- cross check logging
-- Angle for smartphone
-- Permanent viewing angle
-- Add naming argparse
 - Number pins
 - Scale geomagic board
 
 - Log images
+- Permanent viewing angle
 - Prevent phone from selecting text
 - better way to log
 - Test Second Puzzle

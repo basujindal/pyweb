@@ -30,7 +30,9 @@ sudo chmod 777 /dev/ttyACM0 && source devel/setup.bash && roslaunch omni_common 
 
 3. Start the simulation in CoppeliaSim
 
-4. Run `python rosnode_listener.py`
+4. Run `python rosnode_listener.py -n dVRK_logs_Name_Of_User_Geomagic_Exp_Number.csv`
+
+eg. `python rosnode_listener.py -n dVRK_logs_Basu_Jindal_Geomagic_Exp_1.csv`
 
 5. After the experiment is done stop rosnode_listener.py
 
@@ -58,7 +60,9 @@ sudo chmod 777 /dev/ttyACM0 && source devel/setup.bash && roslaunch omni_common 
 
 3. Start the simulation in CoppeliaSim
 
-4. Run `python async_img_sensor.py`
+4. Run `python async_img_sensor.py -n dVRK_logs_Name_Of_User_Smartphone_Exp_Number.csv`
+
+eg. `python rosnode_listener.py -n dVRK_logs_Basu_Jindal_Smartphone_Exp_1.csv`
 
 5. After the experiment is done stop async_img_sensor.py
 
