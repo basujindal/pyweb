@@ -1,4 +1,4 @@
-# Instructions for the conducting the experiments are in SOP.md
+# Instructions for conducting the experiments are in SOP.md
 
 ## Requirements
 
@@ -23,11 +23,10 @@
   unina-icaros](https://github.com/unina-icaros/dvrk-vrep)
 - zmqRemoteApi was taken from CoppeliaSim package.
 
-## ToDO
+## ToDo
 
 - Number pins
 - Scale geomagic board
-
 - Log images
 - Permanent viewing angle
 - Prevent phone from selecting text
