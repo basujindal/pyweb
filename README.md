@@ -6,7 +6,7 @@
 
 ## Steps to run the Simulation
 
-- Launch CoppeliaSim and open the scene `V-REP_models/dVRK_training_peg_on_board.ttm`. This is our simulation Enviornment.
+- Launch CoppeliaSim and open the scene `V-REP_models/dVRK_peg_transfer_smartphone.ttt`. This is our simulation Enviornment.
 
 - Launch Python server made using Django for controlling dVRK simulation using `python manage.py runserver 0.0.0.0:8000`. The dvrk controller can be accessed on the link 127.0.0.1:8000
 
@@ -23,7 +23,16 @@
 
 ## ToDO
 
-- Log images, cross check logging, Log Peg position
+- cross check logging
+- Angle for smartphone
+- Permanent viewing angle
+- Add naming argparse
+- Number pins
+- Scale geomagic board
+
+- Log images
+- Prevent phone from selecting text
+- better way to log
 - Test Second Puzzle
-- 2nd Phone (Maybe)
-- Websockets (Maybe)
+- 2nd Phone
+- Websockets

@@ -8,14 +8,17 @@ import pandas as pd
 from scipy.spatial.transform import Rotation
 from zmqRemoteApi.asyncio import RemoteAPIClient
 import sys
-MAX_INT = sys.maxsize
 
+MAX_INT = sys.maxsize
+server_url =  '10.42.0.1' # IP address of the Django server
+smartphone_ip = '10.42.0.134' # IP address of the smartphone connected
+                              # to the server
 
 async def move_bot(sim):
 
-    df = pd.DataFrame(columns = ['Timestamp', 'Input_L', 'PSM_L', 'Gripper_L', 'Puzzle_position'])
-    df.to_csv("Experiment1.csv")
-    row = {'Timestamp': 0, 'Input_L': 0, 'PSM_L': (0,0,0), 'Gripper_L':(0,0), 'Puzzle_position':0}
+    # CSV file to log simultion data
+    df = pd.DataFrame(columns = ['Timestamp', 'PSM_xyz', 'PSM_roll_pitch' 'Gripper_angle_radians', 'Puzzle_position_xyz'])
+    row = {'Timestamp': 0, 'PSM_xyz': (0,0,0), 'PSM_roll_pitch': (0,0), 'Gripper_angle_radians':(0,0), 'Puzzle_position_xyz':0}
 
     # Getting object handles 
     targetID = await sim.getObjectHandle('TargetPSMR')
@@ -23,6 +26,7 @@ async def move_bot(sim):
     gripper2 = await sim.getObjectHandle("J3_sx_TOOL2")
     toolPitch = await sim.getObjectHandle("/RCM_PSM2/J2_TOOL2")
     toolRoll = await sim.getObjectHandle("J1_TOOL2")
+    peg = await sim.getObjectHandle("Peg")
 
     # Reading initial position
     pos = await sim.getObjectPosition(targetID, -1)
@@ -32,15 +36,16 @@ async def move_bot(sim):
 
 
     # Logging initial position
-    row['PSM_L'] = (pos, tool_roll, tool_pitch)
-    row['Gripper_L'] = (posg1, posg2)
     row['Timestamp'] = time.time()
+    row['PSM_xyz'] = pos
+    row['PSM_roll_pitch'] = (tool_roll, tool_pitch)
+    row['Gripper_angle_radians'] = (posg1, posg2)
+    row['Puzzle_position_xyz'] = sim.getObjectPosition(peg, -1)
     df = df.append(row, ignore_index=True)
     df.to_csv("Experiment1.csv")
 
     init_joy = 100.0
-    url =  '10.42.0.1'
-    js_ik = json.loads( urllib.request.urlopen('http://' +  url + ':8000/dvrk/apijoy/').read().decode('utf-8'))
+    js_ik = json.loads( urllib.request.urlopen('http://' +  server_url + ':8000/dvrk/apijoy/').read().decode('utf-8'))
     dely, delx, delz = float(js_ik['x']), float(js_ik['y']), float(js_ik['z'])
 
     oldflag = 1
@@ -59,17 +64,15 @@ async def move_bot(sim):
         dely_old = dely
         delz_old = delz
 
-        js_ik = json.loads( urllib.request.urlopen('http://' + url + ':8000/dvrk/apijoy/').read().decode('utf-8'))
+        js_ik = json.loads( urllib.request.urlopen('http://' + server_url + ':8000/dvrk/apijoy/').read().decode('utf-8'))
         dely, delx,delz, open_grip, close_grip,sensor_on, scale = float(js_ik['x']), float(js_ik['y']), float(js_ik['z']),js_ik['o'],js_ik['c'],js_ik['s'],float(js_ik['sensitivity'])  
         row['Input_L'] = js_ik
 
         if not sensor_on:
-        # if 1:
 
             movex = -(delx - delx_old)
             movey = -(dely - dely_old)
             movez = -(delz - delz_old)
-            
 
             scale /= 16667
             if (movez or movex or movey):
@@ -89,27 +92,33 @@ async def move_bot(sim):
                 await sim.setObjectPosition(targetID,-1,pos)
 
             if open_grip or close_grip:
-                flag = 1
-                posg1 += (open_grip-close_grip)*scale_gripper
-                posg2 += (open_grip-close_grip)*scale_gripper
+                new_pos = posg1 + (open_grip-close_grip)*scale_gripper
 
-                await sim.setJointPosition(gripper1, posg1) #gripper1
-                await sim.setJointPosition(gripper2, posg2) #gripper2
+                # Limiting gripper angle between 0 and 1.5 radians
+                if new_pos > 0 and new_pos < 1.5: 
+
+                    flag = 1
+                    posg1 += (open_grip-close_grip)*scale_gripper
+                    posg2 += (open_grip-close_grip)*scale_gripper
+
+                    await sim.setJointPosition(gripper1, posg1) #gripper1
+                    await sim.setJointPosition(gripper2, posg2) #gripper2
 
 
             if(flag):
-                row['PSM_L'] = (pos, tool_roll, tool_pitch)
-                row['Gripper_L'] = (posg1, posg2)
                 row['Timestamp'] = time.time()
+                row['PSM_xyz'] = pos
+                row['PSM_roll_pitch'] = (tool_roll, tool_pitch)
+                row['Gripper_angle_radians'] = (posg1, posg2)
+                row['Puzzle_position_xyz'] = sim.getObjectPosition(peg, -1)
                 df = df.append(row, ignore_index=True)
                 df.to_csv("Experiment1.csv")
                 flag = 0
 
 
         if sensor_on:
-        # if 0:
-
-            a = urllib.request.urlopen('http://10.42.0.10:8080/sensors.json')
+        
+            a = urllib.request.urlopen('http://' + smartphone_ip + ':8080/sensors.json')
             a = json.loads(a.read().decode('utf-8'))["rot_vector"]['data']
 
             i = len(a) -1
@@ -139,8 +148,11 @@ async def move_bot(sim):
             await sim.setJointPosition(toolPitch, tool_pitch) #base-yaw (-pi, pi)   
             await sim.setJointPosition(toolRoll, tool_roll)  #tool-roll (-pi, pi)
 
-            row['PSM_L'] = (pos, tool_roll, tool_pitch)
             row['Timestamp'] = time.time()
+            row['PSM_xyz'] = pos
+            row['PSM_roll_pitch'] = (tool_roll, tool_pitch)
+            row['Gripper_angle_radians'] = (posg1, posg2)
+            row['Puzzle_position_xyz'] = sim.getObjectPosition(peg, -1)
             df = df.append(row, ignore_index=True)
             df.to_csv("Experiment1.csv")
         
@@ -156,14 +168,10 @@ async def get_img(sim):
     vis_left = await sim.getObjectHandle("./Vision_sensor_left") 
     url =  '10.42.0.1'   
     t = time.time()
-    for i in range(MAX_INT):
-        img,resx, resy = await sim.getVisionSensorCharImage(vis_left)
+    for _ in range(MAX_INT):
+        img,_,_ = await sim.getVisionSensorCharImage(vis_left)
         
         requests.post('http://' + url + ':8000/dvrk/apimg/', data = img, headers={'Content-Type': 'application/octet-stream'})
-        
-        if(i%100 == 0):
-            print(time.time() - t)
-            t = time.time()
 
         await asyncio.sleep(0.001)
 
